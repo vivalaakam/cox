@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <script src="js/jquery.js"></script>
+    <script>
+      $(document).ready(function() {
+        var data = [
+          {name: "Ильяшенко Мария", login: "milyshenko"},
+          {name: "Андрианова Ольга", login: "oandrianova"},
+          {name: "Апкина Анастасия", login: "aapkina"},
+          {name: "Гришина Татьяна", login: "tgrishina"},
+          {name: "Ладухина Мария", login: "mladukhina"},
+          {name: "Солопова Ольга", login: "osolopova"},
+          {name: "Быстрова Елена", login: "ebystrova"},
+          {name: "Сорокина Ирина", login: "isorokina"},
+          {name: "Горлова Ксения", login: "kgorlova"},
+          {name: "Бровина Екатерина", login: "ebrovina"},
+          {name: "Баранова Екатерина", login: "ebaranova"},
+          {name: "Хачатурова Екатерина", login: "ekhachaturova"},
+          {name: "Рыжих Максим", login: "mryzhikh"},
+          {name: "Алешина Ольга", login: "oaleshina"},
+          {name: "Ярошенко Александр", login: "ayaroshenko"},
+          {name: "Киселева Татьяна", login: "tskiseleva"},
+          {name: "Шоленберг Елена", login: "esholenberg"},
+          {name: "Гришаева Оксана", login: "ogrishaeva"},
+          {name: "Воронков Илья", login: "ivoronkov"},
+          {name: "Аскаров Марат", login: "maskarov"},
+          {name: "Никитина Анна", login: "anikitina"},
+          {name: "Торгашова Светлана", login: "storgashova"},
+          {name: "Пшеничникова Наталья", login: "npshenichnikova"},
+          {name: "Пензар Евгения", login: "epenzar"},
+          {name: "Чеченева Полина", login: "pchecheneva"},
+          {name: "Колчин Леонид", login: "lkolchin"},
+          {name: "Безрукова Надежда", login: "nbezrukova"}
+        ];
+        var word = /@(\w+)/ig, current = '';
+        $('#content').on('keyup', '#message', function(e) {
+          e.preventDefault();
+          var content = $(this).text(),
+                  w = content.match(word),
+                  s;
+          if (w && w.length > 0) {
+            current = w.pop();
+            var regex = new RegExp('^' + current.substring(1), 'i');
+            var ret = [];
+
+            if (data.length > 0) {
+              $('#helper').show();
+            }
+            for (var i = 0, m = data.length; i < m; i++) {
+              if (regex.test(data[i].login)) {
+                ret.push(data[i]);
+              }
+            }
+            var list = $('<ul />'), li;
+
+            for (var i = 0, m = ret.length; i < m; i++) {
+              li = $('<li><a href="#" data-login="' + ret[i].login + '">' + ret[i].name + '</a></li> ')
+              list.append(li);
+            }
+
+            $('#helper').empty().append(list);
+
+          }
+        }).on('click', '#helper li a', function(e) {
+          e.preventDefault();
+          var link = "<a class='help' contenteditable='false' href='#' title='" + $(this).data('login') + "' > " + this.text + "</a> ",
+                  old = $("#message").html();
+          $("#message").html(old.replace(current, link));
+
+          var rng, sel, n = document.getElementById('message');
+          if (document.createRange) {
+            rng = document.createRange();
+            rng.selectNodeContents(n);
+            rng.collapse(false);
+            sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(rng);
+          } else {
+            var rng = document.body.createTextRange();
+            rng.moveToElementText(n);
+            rng.collapseToEnd();
+            rng.select();
+          }
+          $('#helper').empty().hide();
+        });
+
+        $('#send button').click(function() {
+          var text = $('#message').html();
+
+          $('#lent').append($('<div />').append(text));
+          $('#message').text("");
+          current = "";
+        })
+      });
+    </script>
+    <style>
+      #message {
+        width: 500px;
+        height: 200px;
+        border: 1px solid black;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div id="content">
+      <div id="lent"></div>
+      <div id="message" contenteditable>TODO write content</div>
+      <div id="helper"></div>
+      <div id="send"><button>Submit</button></div>
+    </div>
+  </body>
+</html>
